@@ -10,7 +10,7 @@ from difflib import get_close_matches
 
 
 class GeminiInference:
-    def __init__(self, api_key: str = "AIzaSyAkJBDspyPQcVWTjc-zgsk4UhnRd-6OZ7k", config: ConfigManager = None):
+    def __init__(self, api_key: str = "YOUR_API_KEY", config: ConfigManager = None):
         """Initialize Gemini inference with API key and config."""
         self.api_key = api_key
         self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
