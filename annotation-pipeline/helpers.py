@@ -7,7 +7,7 @@
 
 # def get_gmaps_key():
     
-#     return 'AIzaSyDzNunxl1PAIeR8ZTgvTVFYuIpLEPVeWjw'
+#     return 'YOUR_API_KEY'
 
 
 # def create_dir(directory):
