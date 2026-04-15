@@ -195,7 +195,7 @@ def reprocess(args):
         from pymongo import MongoClient
         mongo_client = MongoClient(
             os.environ.get("MONGO_URI",
-                           "mongodb+srv://tech_db_user:IK96qWD8AvtbpOHe@cluster0.nm6pkfg.mongodb.net/roadvision?retryWrites=true&w=majority")
+                           "MONGODB_URL")
         )
         db = mongo_client["roadvision"]
         existing = db.annotation_segments.find_one({"uuid": run_uuid})
