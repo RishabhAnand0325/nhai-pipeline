@@ -1,0 +1,29 @@
+steps:
+  # ── 1. RUN PIPELINE ─────────────────────────────────────────────
+  # GCS_URI   : full gs:// path to the input .MP4 file
+  # ROAD_ID   : e.g. R525275 — determines output prefix in datanh11
+  # OUTPUT_BUCKET : destination bucket (datanh11)
+  # All outputs land at: gs://{OUTPUT_BUCKET}/processed-data/{ROAD_ID}/{BUILD_ID}/
+  - name: '${_AR_IMAGE}'
+    id: 'run-pipeline'
+    dir: '/app'
+    env:
+      - 'GCS_URI=${_GCS_URI}'
+      - 'GCP_PROJECT=$PROJECT_ID'
+      - 'CODEBUILD_BUILD_ID=$BUILD_ID'
+      - 'ROAD_ID=${_ROAD_ID}'
+      - 'OUTPUT_BUCKET=${_OUTPUT_BUCKET}'
+    entrypoint: 'python3.9'
+    args: ['main.py']
+
+# ── OPTIONS ──────────────────────────────────────────────────
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+# ── SUBSTITUTIONS ────────────────────────────────────────────
+substitutions:
+  _GCS_URI: 'gs://datanh11/video-processing-pipelines-data/20251126155933_000113A.MP4'
+  _ROAD_ID: 'R525275'
+  _OUTPUT_BUCKET: 'datanh11'
+  _AR_IMAGE: 'asia-south1-docker.pkg.dev/roadvisiondata/roadvision-nhai-pipeline/pipeline:latest'

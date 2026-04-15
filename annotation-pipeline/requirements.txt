@@ -1,0 +1,39 @@
+# --- Google Cloud Platform Core ---
+google-cloud-storage
+google-cloud-aiplatform
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+
+# --- Image Processing & Data Science ---
+numpy==1.24.4
+pandas==2.0.3
+opencv-python==4.8.0.74
+matplotlib==3.7.3
+Pillow==10.0.1
+contourpy==1.1.1
+
+# --- Geospatial & Maps ---
+geopy>=2.3.0
+googlemaps==4.10.0
+
+# --- Networking & Utilities ---
+requests==2.31.0
+urllib3==1.26.16
+certifi==2023.5.7
+charset-normalizer==3.1.0
+idna==3.4
+tqdm==4.66.1
+
+# --- Supporting Libraries ---
+fonttools==4.42.1
+cycler==0.11.0
+kiwisolver==1.4.5
+packaging==23.1
+pyparsing==3.1.1
+python-dateutil==2.8.2
+pytz==2023.3
+tzdata==2023.3
+zipp==3.16.2
+importlib-resources==6.0.1
+six==1.16.0

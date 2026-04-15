@@ -1,0 +1,49 @@
+# --- Google Cloud Platform Dependencies ---
+google-cloud-storage
+google-cloud-core
+google-auth
+
+# --- Core Dependencies (Python 3.12 compatible) ---
+certifi
+charset-normalizer
+colorama
+contourpy
+cycler
+dill
+filelock
+fonttools
+googlemaps
+idna
+importlib-resources
+Jinja2
+kiwisolver
+MarkupSafe
+matplotlib
+mpmath
+networkx
+numpy
+packaging
+pandas
+Pillow
+psutil
+pyparsing
+python-dateutil
+pytz
+PyYAML
+requests
+scipy
+seaborn
+sentry-sdk
+six
+sympy
+# NOTE: torch+torchvision must be installed FIRST with CUDA support:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# They are NOT listed here to avoid overwriting the CUDA build with a CPU-only version.
+tqdm
+typing_extensions
+tzdata
+ultralytics
+urllib3
+zipp
+opencv-python-headless
+geopy

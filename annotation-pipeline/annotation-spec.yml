@@ -1,0 +1,73 @@
+# steps:
+#   - name: 'bash'
+#     script: |
+#       echo "Waiting for 5 minutes before running the build phase..."
+#       sleep 300
+
+#   - name: 'python:3.10'
+#     entrypoint: bash
+#     args:
+#       - -c
+#       - |
+#         apt-get update && apt-get install -y \
+#             libgl1 \
+#             libglib2.0-0 \
+#             libsm6 \
+#             libxext6 \
+#             libxrender1 \
+#             ffmpeg
+#         cd annotation-pipeline
+#         pip install --upgrade pip
+#         pip install --no-cache-dir -r requirements.txt
+#         python3 annotations.py
+#     env:
+#       - 'GCS_KEY=$_GCS_KEY'
+#       - 'ANNOTATION_BUILD_ID=$BUILD_ID'
+
+#   - name: 'bash'
+#     script: |
+#       echo "Checking output directories..."
+#       ls -R annotation-pipeline/predict || echo "Predict folder not found"
+#       ls -R annotation-pipeline/frames || echo "Frames folder not found"
+
+# options:
+#   logging: CLOUD_LOGGING_ONLY
+#   dynamic_substitutions: true
+
+# substitutions:
+#   _GCS_KEY: "result.json"
+
+
+steps:
+  # ── 1. DELAY PHASE ─────────────────────────────────────────────
+  - name: 'bash'
+    script: |
+      echo "Waiting for 5 minutes before running the build phase..."
+      sleep 300
+
+  # ── 2. RUN ANNOTATION PIPELINE ─────────────────────────────────
+  # Uses the pre-built Artifact Registry image (dependencies already installed)
+  - name: 'asia-south1-docker.pkg.dev/roadvisiondata/roadvision-docker-pipeline/pipeline:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd annotation-pipeline
+        python3 annotations.py
+    env:
+      - 'GCS_KEY=${_GCS_KEY}'
+      - 'ANNOTATION_BUILD_ID=$BUILD_ID'
+
+  # ── 3. POST-BUILD CHECK ────────────────────────────────────────
+  - name: 'bash'
+    script: |
+      echo "Checking output directories..."
+      ls -R annotation-pipeline/predict || echo "Predict folder not found"
+      ls -R annotation-pipeline/frames || echo "Frames folder not found"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamic_substitutions: true
+
+substitutions:
+  _GCS_KEY: "result.json"

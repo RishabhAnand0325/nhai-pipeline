@@ -1,0 +1,14 @@
+venv/
+workdir/
+logs/
+__pycache__/
+*.pyc
+*.engine
+*.pt
+*.onnx
+soy-truth-419309-bba762363624.json
+processing_tracker.json
+*.csv
+*.mp4
+*.MP4
+*.jpg

@@ -1,0 +1,1382 @@
+[
+  {
+    "road_id": "R685847",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 26.478208,
+      "longitude": 90.696928
+    },
+    "end_point": {
+      "latitude": 26.563247,
+      "longitude": 90.070298
+    }
+  },
+  {
+    "road_id": "R955208",
+    "road_name": "NH-31C",
+    "start_point": {
+      "latitude": 26.478134,
+      "longitude": 90.696874
+    },
+    "end_point": {
+      "latitude": 26.552516,
+      "longitude": 90.342964
+    }
+  },
+  {
+    "road_id": "R014427",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 26.451516,
+      "longitude": 91.415321
+    },
+    "end_point": {
+      "latitude": 26.47993,
+      "longitude": 90.701843
+    }
+  },
+  {
+    "road_id": "R202501",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 26.4440185,
+      "longitude": 91.4364386
+    },
+    "end_point": {
+      "latitude": 26.4777736,
+      "longitude": 90.6970888
+    }
+  },
+  {
+    "road_id": "R013027",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 26.465025,
+      "longitude": 91.069275
+    },
+    "end_point": {
+      "latitude": 26.478158,
+      "longitude": 90.696918
+    }
+  },
+  {
+    "road_id": "R257641",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.144847,
+      "longitude": 91.677045
+    },
+    "end_point": {
+      "latitude": 26.110997,
+      "longitude": 91.772556
+    }
+  },
+  {
+    "road_id": "R141024",
+    "road_name": "NH-28",
+    "start_point": {
+      "latitude": 26.412154,
+      "longitude": 84.556132
+    },
+    "end_point": {
+      "latitude": 26.511799,
+      "longitude": 84.837961
+    }
+  },
+  {
+    "road_id": "R161840",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.609648,
+      "longitude": 84.901163
+    },
+    "end_point": {
+      "latitude": 26.148255,
+      "longitude": 85.33161
+    }
+  },
+  {
+    "road_id": "R161840-B",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.609648,
+      "longitude": 84.901163
+    },
+    "end_point": {
+      "latitude": 26.148255,
+      "longitude": 85.33161
+    }
+  },
+  {
+    "road_id": "R515012",
+    "road_name": "NH-57",
+    "start_point": {
+      "latitude": 26.1196889,
+      "longitude": 85.29495
+    },
+    "end_point": {
+      "latitude": 25.7770694,
+      "longitude": 87.4748444
+    }
+  },
+  {
+    "road_id": "R860432",
+    "road_name": "NH-319",
+    "start_point": {
+      "latitude": 25.5320083,
+      "longitude": 84.6430583
+    },
+    "end_point": {
+      "latitude": 25.1671222,
+      "longitude": 83.6148806
+    }
+  },
+  {
+    "road_id": "R336477",
+    "road_name": "NH-84",
+    "start_point": {
+      "latitude": 25.467448,
+      "longitude": 84.5174041
+    },
+    "end_point": {
+      "latitude": 25.5647565,
+      "longitude": 83.9775336
+    }
+  },
+  {
+    "road_id": "R344066",
+    "road_name": "NH-122",
+    "start_point": {
+      "latitude": 26.148255,
+      "longitude": 85.33161
+    },
+    "end_point": {
+      "latitude": 25.431454,
+      "longitude": 86.028375
+    }
+  },
+  {
+    "road_id": "R444989",
+    "road_name": "NH-82",
+    "start_point": {
+      "latitude": 25.1951796,
+      "longitude": 85.5138313
+    },
+    "end_point": {
+      "latitude": 25.4001604,
+      "longitude": 85.9096191
+    }
+  },
+  {
+    "road_id": "R302326",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 25.5044888,
+      "longitude": 86.3740989
+    },
+    "end_point": {
+      "latitude": 25.7789172,
+      "longitude": 87.4423478
+    }
+  },
+  {
+    "road_id": "R566763",
+    "road_name": "NH-80",
+    "start_point": {
+      "latitude": 25.3983902,
+      "longitude": 85.8918255
+    },
+    "end_point": {
+      "latitude": 25.3707992,
+      "longitude": 86.4680417
+    }
+  },
+  {
+    "road_id": "R687900",
+    "road_name": "NH-57",
+    "start_point": {
+      "latitude": 26.2911717,
+      "longitude": 86.6396195
+    },
+    "end_point": {
+      "latitude": 26.2781667,
+      "longitude": 86.7066778
+    }
+  },
+  {
+    "road_id": "R558080",
+    "road_name": "NH-131A",
+    "start_point": {
+      "latitude": 25.7771701,
+      "longitude": 87.3675023
+    },
+    "end_point": {
+      "latitude": 25.3873678,
+      "longitude": 87.6180321
+    }
+  },
+  {
+    "road_id": "R238523",
+    "road_name": "NH-327E",
+    "start_point": {
+      "latitude": 26.2588229,
+      "longitude": 87.7678497
+    },
+    "end_point": {
+      "latitude": 26.13247,
+      "longitude": 87.4504235
+    }
+  },
+  {
+    "road_id": "R630731",
+    "road_name": "NH-57A",
+    "start_point": {
+      "latitude": 26.3826081,
+      "longitude": 87.2595903
+    },
+    "end_point": {
+      "latitude": 26.2987683,
+      "longitude": 87.2676449
+    }
+  },
+  {
+    "road_id": "R455965",
+    "road_name": "NH-327E",
+    "start_point": {
+      "latitude": 26.5264015,
+      "longitude": 88.1138719
+    },
+    "end_point": {
+      "latitude": 26.2643151,
+      "longitude": 87.8270126
+    }
+  },
+  {
+    "road_id": "R097223",
+    "road_name": "NH-77",
+    "start_point": {
+      "latitude": 25.6924351,
+      "longitude": 85.2045439
+    },
+    "end_point": {
+      "latitude": 26.1195734,
+      "longitude": 85.3891494
+    }
+  },
+  {
+    "road_id": "R995396",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 25.7771387,
+      "longitude": 87.4704918
+    },
+    "end_point": {
+      "latitude": 25.8754112,
+      "longitude": 87.8433196
+    }
+  },
+  {
+    "road_id": "R752819",
+    "road_name": "NH-131G",
+    "start_point": {
+      "latitude": 25.5822082,
+      "longitude": 84.9178933
+    },
+    "end_point": {
+      "latitude": 25.4409157,
+      "longitude": 85.2087957
+    }
+  },
+  {
+    "road_id": "R424551",
+    "road_name": "NH-333",
+    "start_point": {
+      "latitude": 25.346506,
+      "longitude": 86.514884
+    },
+    "end_point": {
+      "latitude": 25.461024,
+      "longitude": 86.44151
+    }
+  },
+  {
+    "road_id": "R335602",
+    "road_name": "NH-30",
+    "start_point": {
+      "latitude": 25.5750295,
+      "longitude": 84.7924636
+    },
+    "end_point": {
+      "latitude": 25.5169391,
+      "longitude": 84.5379623
+    }
+  },
+  {
+    "road_id": "R822318",
+    "road_name": "NH-77",
+    "start_point": {
+      "latitude": 26.1490025,
+      "longitude": 85.3903704
+    },
+    "end_point": {
+      "latitude": 25.7034103,
+      "longitude": 86.7017371
+    }
+  },
+  {
+    "road_id": "R870495",
+    "road_name": "NH-30",
+    "start_point": {
+      "latitude": 25.5849947,
+      "longitude": 85.1340644
+    },
+    "end_point": {
+      "latitude": 25.4497823,
+      "longitude": 85.5357337
+    }
+  },
+  {
+    "road_id": "R468991",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.4482855,
+      "longitude": 83.9136657
+    },
+    "end_point": {
+      "latitude": 26.5143366,
+      "longitude": 84.8392343
+    }
+  },
+  {
+    "road_id": "R714269",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 24.1107607,
+      "longitude": 85.7363569
+    },
+    "end_point": {
+      "latitude": 23.9552597,
+      "longitude": 86.0717688
+    }
+  },
+  {
+    "road_id": "R506134",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 23.966031,
+      "longitude": 86.0553038
+    },
+    "end_point": {
+      "latitude": 23.8535654,
+      "longitude": 86.4204404
+    }
+  },
+  {
+    "road_id": "R518727",
+    "road_name": "NH-23",
+    "start_point": {
+      "latitude": 23.3819427,
+      "longitude": 85.295549
+    },
+    "end_point": {
+      "latitude": 23.3169777,
+      "longitude": 85.0986867
+    }
+  },
+  {
+    "road_id": "R730174",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 22.6485235,
+      "longitude": 86.4143833
+    },
+    "end_point": {
+      "latitude": 22.3063219,
+      "longitude": 86.8855479
+    }
+  },
+  {
+    "road_id": "R190080",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 23.2812007,
+      "longitude": 85.4130703
+    },
+    "end_point": {
+      "latitude": 22.9638994,
+      "longitude": 85.9592452
+    }
+  },
+  {
+    "road_id": "R026093",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 22.9617838,
+      "longitude": 85.9684318
+    },
+    "end_point": {
+      "latitude": 22.8890108,
+      "longitude": 86.125972
+    }
+  },
+  {
+    "road_id": "R421345",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 22.8890108,
+      "longitude": 86.125972
+    },
+    "end_point": {
+      "latitude": 22.6519963,
+      "longitude": 86.4120851
+    }
+  },
+  {
+    "road_id": "R345855",
+    "road_name": "NH-75",
+    "start_point": {
+      "latitude": 23.4816064,
+      "longitude": 85.0224521
+    },
+    "end_point": {
+      "latitude": 23.5418912,
+      "longitude": 84.8186924
+    }
+  },
+  {
+    "road_id": "R364204",
+    "road_name": "NH-75",
+    "start_point": {
+      "latitude": 23.5418912,
+      "longitude": 84.8186924
+    },
+    "end_point": {
+      "latitude": 23.4809624,
+      "longitude": 85.0263192
+    }
+  },
+  {
+    "road_id": "R405189",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 24.305479,
+      "longitude": 85.4156876
+    },
+    "end_point": {
+      "latitude": 23.9924861,
+      "longitude": 85.3634355
+    }
+  },
+  {
+    "road_id": "R718759",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 24.0136459,
+      "longitude": 85.3396866
+    },
+    "end_point": {
+      "latitude": 23.4452499,
+      "longitude": 85.4298055
+    }
+  },
+  {
+    "road_id": "R452250",
+    "road_name": "NH-75",
+    "start_point": {
+      "latitude": 24.2148802,
+      "longitude": 83.9267704
+    },
+    "end_point": {
+      "latitude": 24.1425121,
+      "longitude": 83.779596
+    }
+  },
+  {
+    "road_id": "R852210",
+    "road_name": "NH-32",
+    "start_point": {
+      "latitude": 23.8325982,
+      "longitude": 86.519919
+    },
+    "end_point": {
+      "latitude": 23.6393939,
+      "longitude": 86.1731772
+    }
+  },
+  {
+    "road_id": "R952979",
+    "road_name": "NH-33",
+    "start_point": {
+      "latitude": 23.2985902,
+      "longitude": 85.2446365
+    },
+    "end_point": {
+      "latitude": 23.2813988,
+      "longitude": 85.4147909
+    }
+  },
+  {
+    "road_id": "R469559",
+    "road_name": "NH-98",
+    "start_point": {
+      "latitude": 24.5449546,
+      "longitude": 84.279464
+    },
+    "end_point": {
+      "latitude": 24.1766389,
+      "longitude": 84.0549193
+    }
+  },
+  {
+    "road_id": "R929200",
+    "road_name": "NH-40",
+    "start_point": {
+      "latitude": 26.0993463,
+      "longitude": 91.8762333
+    },
+    "end_point": {
+      "latitude": 25.5909727,
+      "longitude": 91.8746907
+    }
+  },
+  {
+    "road_id": "R540932",
+    "road_name": "NH-40",
+    "start_point": {
+      "latitude": 25.6746376,
+      "longitude": 91.9019052
+    },
+    "end_point": {
+      "latitude": 25.5521196,
+      "longitude": 92.050791
+    }
+  },
+  {
+    "road_id": "R756132",
+    "road_name": "NH-16",
+    "start_point": {
+      "latitude": 20.7099617,
+      "longitude": 86.0984316
+    },
+    "end_point": {
+      "latitude": 21.0573959,
+      "longitude": 86.4961925
+    }
+  },
+  {
+    "road_id": "R746672",
+    "road_name": "NH-53(AH-46)",
+    "start_point": {
+      "latitude": 21.3078252,
+      "longitude": 83.2622298
+    },
+    "end_point": {
+      "latitude": 21.4638481,
+      "longitude": 83.9784461
+    }
+  },
+  {
+    "road_id": "R122941",
+    "road_name": "NH-49",
+    "start_point": {
+      "latitude": 21.438635,
+      "longitude": 85.296261
+    },
+    "end_point": {
+      "latitude": 21.5453962,
+      "longitude": 84.6027591
+    }
+  },
+  {
+    "road_id": "R504376",
+    "road_name": "NH-20",
+    "start_point": {
+      "latitude": 21.4944914,
+      "longitude": 85.4755286
+    },
+    "end_point": {
+      "latitude": 21.1191808,
+      "longitude": 86.3243949
+    }
+  },
+  {
+    "road_id": "R710063",
+    "road_name": "NH-6",
+    "start_point": {
+      "latitude": 22.277917,
+      "longitude": 86.7246248
+    },
+    "end_point": {
+      "latitude": 21.4944914,
+      "longitude": 85.4755286
+    }
+  },
+  {
+    "road_id": "R480394",
+    "road_name": "NH-5",
+    "start_point": {
+      "latitude": 21.501139,
+      "longitude": 86.9176041
+    },
+    "end_point": {
+      "latitude": 22.1822939,
+      "longitude": 86.6463408
+    }
+  },
+  {
+    "road_id": "R507956",
+    "road_name": "NH-316",
+    "start_point": {
+      "latitude": 20.0730221,
+      "longitude": 85.8321837
+    },
+    "end_point": {
+      "latitude": 20.0024271,
+      "longitude": 85.8201757
+    }
+  },
+  {
+    "road_id": "R626092",
+    "road_name": "NH-200",
+    "start_point": {
+      "latitude": 21.7818704,
+      "longitude": 83.4812483
+    },
+    "end_point": {
+      "latitude": 21.8728886,
+      "longitude": 83.9944092
+    }
+  },
+  {
+    "road_id": "R082407",
+    "road_name": "NH-149",
+    "start_point": {
+      "latitude": 20.948174,
+      "longitude": 85.2251396
+    },
+    "end_point": {
+      "latitude": 20.9319871,
+      "longitude": 85.5554109
+    }
+  },
+  {
+    "road_id": "R787919",
+    "road_name": "NH-200",
+    "start_point": {
+      "latitude": 20.9308204,
+      "longitude": 85.5621358
+    },
+    "end_point": {
+      "latitude": 20.988141,
+      "longitude": 85.98833
+    }
+  },
+  {
+    "road_id": "R645807",
+    "road_name": "NH-16",
+    "start_point": {
+      "latitude": 20.2959848,
+      "longitude": 85.8243122
+    },
+    "end_point": {
+      "latitude": 20.709879,
+      "longitude": 86.0969198
+    }
+  },
+  {
+    "road_id": "R502545",
+    "road_name": "NH-23",
+    "start_point": {
+      "latitude": 22.4068023,
+      "longitude": 84.729272
+    },
+    "end_point": {
+      "latitude": 22.2492288,
+      "longitude": 84.8802883
+    }
+  },
+  {
+    "road_id": "R359052",
+    "road_name": "NH-143",
+    "start_point": {
+      "latitude": 22.217569,
+      "longitude": 84.810206
+    },
+    "end_point": {
+      "latitude": 21.874516,
+      "longitude": 84.919588
+    }
+  },
+  {
+    "road_id": "R510939",
+    "road_name": "NH-53",
+    "start_point": {
+      "latitude": 21.5453962,
+      "longitude": 84.6027591
+    },
+    "end_point": {
+      "latitude": 21.4723871,
+      "longitude": 84.0040552
+    }
+  },
+  {
+    "road_id": "R321702",
+    "road_name": "NH-215",
+    "start_point": {
+      "latitude": 21.9020453,
+      "longitude": 85.2453453
+    },
+    "end_point": {
+      "latitude": 21.8670003,
+      "longitude": 84.9279466
+    }
+  },
+  {
+    "road_id": "R226988",
+    "road_name": "NH-316",
+    "start_point": {
+      "latitude": 20.3093112,
+      "longitude": 85.8726358
+    },
+    "end_point": {
+      "latitude": 19.814056,
+      "longitude": 85.817814
+    }
+  },
+  {
+    "road_id": "R793937",
+    "road_name": "NH-16",
+    "start_point": {
+      "latitude": 19.388778,
+      "longitude": 85.0629767
+    },
+    "end_point": {
+      "latitude": 19.1127159,
+      "longitude": 84.6826643
+    }
+  },
+  {
+    "road_id": "R036130",
+    "road_name": "NH-5",
+    "start_point": {
+      "latitude": 19.3921279,
+      "longitude": 85.0625094
+    },
+    "end_point": {
+      "latitude": 19.9170161,
+      "longitude": 85.3831299
+    }
+  },
+  {
+    "road_id": "R091919",
+    "road_name": "NH-215",
+    "start_point": {
+      "latitude": 21.9558626,
+      "longitude": 85.5704498
+    },
+    "end_point": {
+      "latitude": 21.9305003,
+      "longitude": 85.2319201
+    }
+  },
+  {
+    "road_id": "R757118",
+    "road_name": "NH-53",
+    "start_point": {
+      "latitude": 20.7074796,
+      "longitude": 86.1073525
+    },
+    "end_point": {
+      "latitude": 20.3109484,
+      "longitude": 86.6081376
+    }
+  },
+  {
+    "road_id": "R343390",
+    "road_name": "NH-5",
+    "start_point": {
+      "latitude": 19.9263814,
+      "longitude": 85.3932335
+    },
+    "end_point": {
+      "latitude": 20.2955162,
+      "longitude": 85.8229504
+    }
+  },
+  {
+    "road_id": "R156500",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 27.1766702,
+      "longitude": 78.0077768
+    },
+    "end_point": {
+      "latitude": 26.7907544,
+      "longitude": 79.0348046
+    }
+  },
+  {
+    "road_id": "R809302",
+    "road_name": "NH-19",
+    "start_point": {
+      "latitude": 26.7828759,
+      "longitude": 79.0258199
+    },
+    "end_point": {
+      "latitude": 26.3816982,
+      "longitude": 80.4140566
+    }
+  },
+  {
+    "road_id": "R176506",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 25.268931,
+      "longitude": 82.845201
+    },
+    "end_point": {
+      "latitude": 25.376607,
+      "longitude": 82.913941
+    }
+  },
+  {
+    "road_id": "R208558",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 27.221197,
+      "longitude": 77.91842
+    },
+    "end_point": {
+      "latitude": 27.103873,
+      "longitude": 77.995972
+    }
+  },
+  {
+    "road_id": "R608650",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 25.4487774,
+      "longitude": 78.5121045
+    },
+    "end_point": {
+      "latitude": 25.9858924,
+      "longitude": 79.4433657
+    }
+  },
+  {
+    "road_id": "R121269",
+    "road_name": "NH-25",
+    "start_point": {
+      "latitude": 26.018727,
+      "longitude": 79.52693
+    },
+    "end_point": {
+      "latitude": 26.383209,
+      "longitude": 80.013076
+    }
+  },
+  {
+    "road_id": "R886826",
+    "road_name": "NH-28",
+    "start_point": {
+      "latitude": 26.991836,
+      "longitude": 81.020716
+    },
+    "end_point": {
+      "latitude": 26.895391,
+      "longitude": 81.081603
+    }
+  },
+  {
+    "road_id": "R292582",
+    "road_name": "NH-28",
+    "start_point": {
+      "latitude": 26.8049939,
+      "longitude": 82.2181035
+    },
+    "end_point": {
+      "latitude": 26.7343378,
+      "longitude": 83.357091
+    }
+  },
+  {
+    "road_id": "R141220",
+    "road_name": "NH-28",
+    "start_point": {
+      "latitude": 26.745045,
+      "longitude": 83.531371
+    },
+    "end_point": {
+      "latitude": 26.746237,
+      "longitude": 83.251571
+    }
+  },
+  {
+    "road_id": "R825593",
+    "road_name": "NH-24",
+    "start_point": {
+      "latitude": 28.8394093,
+      "longitude": 78.7716091
+    },
+    "end_point": {
+      "latitude": 28.3879811,
+      "longitude": 79.4186288
+    }
+  },
+  {
+    "road_id": "R089027",
+    "road_name": "NH-709",
+    "start_point": {
+      "latitude": 28.878452,
+      "longitude": 77.248655
+    },
+    "end_point": {
+      "latitude": 29.409497,
+      "longitude": 77.293646
+    }
+  },
+  {
+    "road_id": "R162166",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 25.4683379,
+      "longitude": 81.8543042
+    },
+    "end_point": {
+      "latitude": 25.0482772,
+      "longitude": 81.7319582
+    }
+  },
+  {
+    "road_id": "R385485",
+    "road_name": "NH-56",
+    "start_point": {
+      "latitude": 26.8288441,
+      "longitude": 80.9598966
+    },
+    "end_point": {
+      "latitude": 26.2563106,
+      "longitude": 82.0605964
+    }
+  },
+  {
+    "road_id": "R190215",
+    "road_name": "NH-235",
+    "start_point": {
+      "latitude": 28.9173704,
+      "longitude": 77.7336268
+    },
+    "end_point": {
+      "latitude": 28.4070909,
+      "longitude": 77.8476882
+    }
+  },
+  {
+    "road_id": "R694627",
+    "road_name": "NH-233",
+    "start_point": {
+      "latitude": 26.6094361,
+      "longitude": 82.6384722
+    },
+    "end_point": {
+      "latitude": 26.2795222,
+      "longitude": 83.0025778
+    }
+  },
+  {
+    "road_id": "R938055",
+    "road_name": "NH-73",
+    "start_point": {
+      "latitude": 29.9758053,
+      "longitude": 77.6604079
+    },
+    "end_point": {
+      "latitude": 30.1288825,
+      "longitude": 77.2670972
+    }
+  },
+  {
+    "road_id": "R006056",
+    "road_name": "NH-93",
+    "start_point": {
+      "latitude": 27.916498,
+      "longitude": 78.0724354
+    },
+    "end_point": {
+      "latitude": 28.834937,
+      "longitude": 78.779546
+    }
+  },
+  {
+    "road_id": "R961782",
+    "road_name": "NH-231",
+    "start_point": {
+      "latitude": 26.2144806,
+      "longitude": 81.2525161
+    },
+    "end_point": {
+      "latitude": 25.7463029,
+      "longitude": 82.6835535
+    }
+  },
+  {
+    "road_id": "R082656",
+    "road_name": "NH-233",
+    "start_point": {
+      "latitude": 27.029346,
+      "longitude": 82.8032742
+    },
+    "end_point": {
+      "latitude": 26.8139168,
+      "longitude": 82.7627541
+    }
+  },
+  {
+    "road_id": "R037528",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 25.4400343,
+      "longitude": 81.861466
+    },
+    "end_point": {
+      "latitude": 25.3905713,
+      "longitude": 81.863038
+    }
+  },
+  {
+    "road_id": "R954893",
+    "road_name": "NH-709A",
+    "start_point": {
+      "latitude": 28.9844639,
+      "longitude": 77.7062663
+    },
+    "end_point": {
+      "latitude": 29.4501295,
+      "longitude": 77.3169768
+    }
+  },
+  {
+    "road_id": "R511441",
+    "road_name": "NH-232",
+    "start_point": {
+      "latitude": 26.3757823,
+      "longitude": 82.6843105
+    },
+    "end_point": {
+      "latitude": 26.2211532,
+      "longitude": 81.2557396
+    }
+  },
+  {
+    "road_id": "R497658",
+    "road_name": "NH-74",
+    "start_point": {
+      "latitude": 27.1752556,
+      "longitude": 78.0098167
+    },
+    "end_point": {
+      "latitude": 27.8761083,
+      "longitude": 78.1358139
+    }
+  },
+  {
+    "road_id": "R184299",
+    "road_name": "NH-330A",
+    "start_point": {
+      "latitude": 26.457211,
+      "longitude": 81.626258
+    },
+    "end_point": {
+      "latitude": 26.756359,
+      "longitude": 82.135992
+    }
+  },
+  {
+    "road_id": "R181442",
+    "road_name": "NH-319D",
+    "start_point": {
+      "latitude": 25.491067,
+      "longitude": 81.9976
+    },
+    "end_point": {
+      "latitude": 25.657594,
+      "longitude": 82.189859
+    }
+  },
+  {
+    "road_id": "R358258",
+    "road_name": "NH-119",
+    "start_point": {
+      "latitude": 28.8767431,
+      "longitude": 77.7293249
+    },
+    "end_point": {
+      "latitude": 29.6019847,
+      "longitude": 78.3222973
+    }
+  },
+  {
+    "road_id": "R702650",
+    "road_name": "NH-232",
+    "start_point": {
+      "latitude": 26.2144921,
+      "longitude": 81.2509358
+    },
+    "end_point": {
+      "latitude": 25.4762984,
+      "longitude": 80.3376454
+    }
+  },
+  {
+    "road_id": "R667084",
+    "road_name": "NH-28",
+    "start_point": {
+      "latitude": 26.3594755,
+      "longitude": 82.9042095
+    },
+    "end_point": {
+      "latitude": 26.8138941,
+      "longitude": 82.7627442
+    }
+  },
+  {
+    "road_id": "R389585",
+    "road_name": "NH-06",
+    "start_point": {
+      "latitude": 22.6809396,
+      "longitude": 88.295213
+    },
+    "end_point": {
+      "latitude": 22.3451807,
+      "longitude": 87.3046467
+    }
+  },
+  {
+    "road_id": "R176274",
+    "road_name": "NH-16",
+    "start_point": {
+      "latitude": 21.5488304,
+      "longitude": 86.9362634
+    },
+    "end_point": {
+      "latitude": 22.3451303,
+      "longitude": 87.3046442
+    }
+  },
+  {
+    "road_id": "R505056",
+    "road_name": "NH-19 (AH-1)",
+    "start_point": {
+      "latitude": 23.1966103,
+      "longitude": 87.9997071
+    },
+    "end_point": {
+      "latitude": 23.4362867,
+      "longitude": 87.4792276
+    }
+  },
+  {
+    "road_id": "R844625",
+    "road_name": "NH-2",
+    "start_point": {
+      "latitude": 23.1966103,
+      "longitude": 87.9997071
+    },
+    "end_point": {
+      "latitude": 22.6809296,
+      "longitude": 88.2967165
+    }
+  },
+  {
+    "road_id": "R633814",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 25.8754466,
+      "longitude": 87.8432911
+    },
+    "end_point": {
+      "latitude": 26.2553895,
+      "longitude": 88.200754
+    }
+  },
+  {
+    "road_id": "R176426",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.7316208,
+      "longitude": 88.4054518
+    },
+    "end_point": {
+      "latitude": 26.2553895,
+      "longitude": 88.200754
+    }
+  },
+  {
+    "road_id": "R934878",
+    "road_name": "New NH-31",
+    "start_point": {
+      "latitude": 25.888076,
+      "longitude": 87.823341
+    },
+    "end_point": {
+      "latitude": 26.602016,
+      "longitude": 88.291479
+    }
+  },
+  {
+    "road_id": "R773190",
+    "road_name": "NH-27",
+    "start_point": {
+      "latitude": 26.4909472,
+      "longitude": 89.5922028
+    },
+    "end_point": {
+      "latitude": 26.3123361,
+      "longitude": 89.7520889
+    }
+  },
+  {
+    "road_id": "R726390",
+    "road_name": "NH-6",
+    "start_point": {
+      "latitude": 22.3262785,
+      "longitude": 86.8813819
+    },
+    "end_point": {
+      "latitude": 22.3373812,
+      "longitude": 87.2581709
+    }
+  },
+  {
+    "road_id": "R678326",
+    "road_name": "NH-116",
+    "start_point": {
+      "latitude": 22.435225,
+      "longitude": 87.8603802
+    },
+    "end_point": {
+      "latitude": 22.0627685,
+      "longitude": 88.0830669
+    }
+  },
+  {
+    "road_id": "R338373",
+    "road_name": "NH-34",
+    "start_point": {
+      "latitude": 24.779766,
+      "longitude": 87.91646
+    },
+    "end_point": {
+      "latitude": 25.6328194,
+      "longitude": 88.131673
+    }
+  },
+  {
+    "road_id": "R950152",
+    "road_name": "NH 12",
+    "start_point": {
+      "latitude": 25.6328682,
+      "longitude": 88.1316081
+    },
+    "end_point": {
+      "latitude": 25.8753779,
+      "longitude": 87.8416802
+    }
+  },
+  {
+    "road_id": "R555382",
+    "road_name": "NH-34",
+    "start_point": {
+      "latitude": 24.0982432,
+      "longitude": 88.2682785
+    },
+    "end_point": {
+      "latitude": 24.7802354,
+      "longitude": 87.9147233
+    }
+  },
+  {
+    "road_id": "R445017",
+    "road_name": "NH-31D",
+    "start_point": {
+      "latitude": 26.5927653,
+      "longitude": 88.2877837
+    },
+    "end_point": {
+      "latitude": 26.5821703,
+      "longitude": 89.0049157
+    }
+  },
+  {
+    "road_id": "R609271",
+    "road_name": "NH-31",
+    "start_point": {
+      "latitude": 26.2346611,
+      "longitude": 88.1549194
+    },
+    "end_point": {
+      "latitude": 26.2808333,
+      "longitude": 88.2200944
+    }
+  },
+  {
+    "road_id": "R655350",
+    "road_name": "NH-34",
+    "start_point": {
+      "latitude": 23.4018339,
+      "longitude": 88.4988035
+    },
+    "end_point": {
+      "latitude": 24.0982195,
+      "longitude": 88.2681628
+    }
+  },
+  {
+    "road_id": "R353166",
+    "road_name": "NH-31C",
+    "start_point": {
+      "latitude": 26.4907014,
+      "longitude": 89.3504999
+    },
+    "end_point": {
+      "latitude": 26.3122365,
+      "longitude": 89.7519577
+    }
+  },
+  {
+    "road_id": "R525275",
+    "road_name": "Unknown-R525275",
+    "start_point": {
+      "latitude": 17.238917,
+      "longitude": 80.140695
+    },
+    "end_point": {
+      "latitude": 17.204632,
+      "longitude": 80.154279
+    }
+  },
+  {
+    "road_id": "R843035",
+    "road_name": "Unknown-R843035",
+    "start_point": {
+      "latitude": 17.220680,
+      "longitude": 80.157842
+    },
+    "end_point": {
+      "latitude": 17.224708,
+      "longitude": 80.154170
+    }
+  },
+  {
+    "road_id": "R000101",
+    "road_name": "Unknown-R000101",
+    "start_point": {
+      "latitude": 25.3536,
+      "longitude": 51.4322
+    },
+    "end_point": {
+      "latitude": 25.4294,
+      "longitude": 51.3923
+    }
+  }
+]

@@ -1,0 +1,59 @@
+# version: 0.2
+
+# phases:
+#   # pre_build:
+#   #   commands:
+#   #     - echo "Waiting for 5 minutes before running the build phase..."
+#   #     - sleep 300
+#   build:
+#     commands:
+#       # - cd ./annotation-pipeline
+#       # - python3 annotations.py
+#       - echo 'Test'
+#   post_build:
+#     commands:
+#       - ls
+#       # - echo "Checking predict/ directory before running script..."
+#       # - ls -R predict/
+
+# artifacts:
+#   files:
+#     - frames/*
+#     - predict/*
+#     - inspection.csv
+#   base-directory: 'annotation-pipeline'
+#   name: artifacts
+
+
+steps:
+  # ── 1. DELAY PHASE ─────────────────────────────────────────────
+  - name: 'bash'
+    script: |
+      echo "Waiting for 5 minutes before running the build phase..."
+      sleep 300
+
+  # ── 2. RUN ANNOTATION PIPELINE (BAK) ───────────────────────────
+  - name: 'asia-south1-docker.pkg.dev/roadvisiondata/roadvision-docker-pipeline/pipeline:latest'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd annotation-pipeline-bak
+        python3 annotations.py
+    env:
+      - 'GCS_KEY=${_GCS_KEY}'
+      - 'ANNOTATION_BUILD_ID=$BUILD_ID'
+
+  # ── 3. POST-BUILD CHECK ────────────────────────────────────────
+  - name: 'bash'
+    script: |
+      echo "Checking output directories..."
+      ls -R annotation-pipeline-bak/predict || echo "Predict folder not found"
+      ls -R annotation-pipeline-bak/frames || echo "Frames folder not found"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamic_substitutions: true
+
+substitutions:
+  _GCS_KEY: "result.json"
