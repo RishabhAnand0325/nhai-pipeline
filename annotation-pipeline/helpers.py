@@ -693,7 +693,7 @@ from googlemaps import Client
 
 def get_gmaps_key():
     
-    return 'AIzaSyDzNunxl1PAIeR8ZTgvTVFYuIpLEPVeWjw'
+    return 'GMAPS_KEY'
 
 
 def create_dir(directory):
