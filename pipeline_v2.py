@@ -970,7 +970,8 @@ def severity_for(label: str, override_map: dict | None = None) -> str:
 # remain visible.
 LABEL_COLORS_RGB: dict[str, tuple[int, int, int]] = {
     "Potholes": (255, 182, 193), "Cracking": (255, 192, 203),
-    "Rutting": (255, 160, 180), "Stripping/Delamination": (255, 228, 225),
+    "Rutting": (255, 160, 180), "Patching": (220, 100, 100),
+    "Stripping/Delamination": (255, 228, 225),
     "Pavement Joint": (255, 218, 185), "Pavement Damage (Severe)": (255, 200, 200),
     "Unsealed Road": (255, 235, 205), "Settlement": (255, 240, 245),
     "Shoulder - Rain Cuts": (244, 164, 96), "Shoulder - Edge Drop": (222, 184, 135),
@@ -1825,53 +1826,113 @@ def _ls_pair_results(results: list[dict]) -> list[dict]:
     return out
 
 
+def _build_ls_lookup_from_tasks(tasks: list[dict]) -> dict[str, list[dict]]:
+    """
+    Convert a list of LS tasks (or annotations.json contents) into the
+    {trailing_two_path_segments → [bbox dicts]} lookup that
+    apply_ls_to_frames consumes. Each task's bboxes are converted from
+    LS percentage coords to absolute pixel coords; original_width /
+    original_height come from the LS result element. Severity is left
+    as 'none' — Phase C's retag fills it in.
+
+    IMPORTANT: every task lands in the lookup, INCLUDING tasks where the
+    annotator explicitly drew zero bboxes (i.e. "I reviewed this frame
+    and confirmed it has no defects"). The lookup value will be `[]` in
+    that case, and apply_ls_to_frames will OVERWRITE the frame's
+    inference_info with the empty list — clearing any stale YOLO bboxes
+    from the original result.json. Without this, an empty-task frame
+    would silently fall back to the old YOLO output and the dashboard
+    would still show wrong overlays.
+    """
+    lookup: dict[str, list[dict]] = {}
+    n_bboxes = 0
+    n_empty_tasks = 0
+    label_hits: Counter[str] = Counter()
+    for t in tasks:
+        image = (t.get("data") or {}).get("image") or ""
+        if not image:
+            continue
+        parts = image.strip("/").split("/")
+        if len(parts) < 2:
+            continue
+        tail = "/".join(parts[-2:])
+        # Always seed the entry — confirms this frame was reviewed.
+        if tail not in lookup:
+            lookup[tail] = []
+        for ann in t.get("annotations", []):
+            paired = _ls_pair_results(ann.get("result", []) or [])
+            for p in paired:
+                if p["ow"] <= 0 or p["oh"] <= 0:
+                    continue
+                lookup[tail].append({
+                    "label":    p["label"],
+                    "bbox":     [p["x_pct"] * p["ow"] / 100.0,
+                                 p["y_pct"] * p["oh"] / 100.0,
+                                 p["w_pct"] * p["ow"] / 100.0,
+                                 p["h_pct"] * p["oh"] / 100.0],
+                    "severity": "none",
+                })
+                n_bboxes += 1
+                label_hits[p["label"]] += 1
+        if not lookup[tail]:
+            n_empty_tasks += 1
+    log.info("[LS] %d tasks (%d with bboxes, %d explicitly empty), "
+             "%d total bboxes, %d distinct labels",
+             len(lookup), len(lookup) - n_empty_tasks, n_empty_tasks,
+             n_bboxes, len(label_hits))
+    return lookup
+
+
 def load_ls_export_dir(ls_root: str) -> dict[str, list[dict]]:
     """
     Build a lookup keyed by trailing two segments of each task's image URL
-    (e.g. "20260321095111_000100F/frame_00036.jpg") → list of bboxes in
-    pixel coords with severity placeholder. Phase C's retag fills severity.
+    from a multi-folder Label Studio export root (the typical layout when
+    multiple LS projects' annotations are aggregated). Each subfolder
+    contains an annotations.json. Used by --ls-export-dir.
     """
     root = Path(ls_root)
     if not root.is_dir():
         raise SystemExit(f"--ls-export-dir not found: {ls_root}")
-    lookup: dict[str, list[dict]] = {}
-    n_bboxes = 0; label_hits: Counter[str] = Counter()
+    all_tasks: list[dict] = []
     for folder in sorted(root.iterdir()):
         if not folder.is_dir():
             continue
         ann_path = folder / "annotations.json"
         if not ann_path.exists():
             continue
-        tasks = json.load(open(ann_path))
-        for t in tasks:
-            image = t.get("data", {}).get("image") or ""
-            if not image:
-                continue
-            parts = image.strip("/").split("/")
-            if len(parts) < 2:
-                continue
-            tail = "/".join(parts[-2:])
-            for ann in t.get("annotations", []):
-                paired = _ls_pair_results(ann.get("result", []) or [])
-                bboxes = []
-                for p in paired:
-                    if p["ow"] <= 0 or p["oh"] <= 0:
-                        continue
-                    bboxes.append({
-                        "label":    p["label"],
-                        "bbox":     [p["x_pct"] * p["ow"] / 100.0,
-                                     p["y_pct"] * p["oh"] / 100.0,
-                                     p["w_pct"] * p["ow"] / 100.0,
-                                     p["h_pct"] * p["oh"] / 100.0],
-                        "severity": "none",
-                    })
-                    label_hits[p["label"]] += 1
-                if bboxes:
-                    lookup.setdefault(tail, []).extend(bboxes)
-                    n_bboxes += len(bboxes)
-    log.info("[LS] %d frames with bboxes, %d total bboxes, %d distinct labels",
-             len(lookup), n_bboxes, len(label_hits))
-    return lookup
+        all_tasks.extend(json.load(open(ann_path)))
+    return _build_ls_lookup_from_tasks(all_tasks)
+
+
+def load_ls_export_from_gcs(road_id: str, uid: str) -> dict[str, list[dict]] | None:
+    """
+    Try to fetch the user-uploaded annotations.json sibling next to the
+    merged result.json (RV Studio writes here directly):
+
+        gs://datanh11/processed-data/{road_id}/{uid}/annotations.json
+
+    When present, this is the human-corrected source of truth — V2's
+    --reprocess uses it (instead of result.json's annotations) so manual
+    edits propagate end-to-end. Returns None when the file doesn't exist.
+    """
+    blob_path = f"{PROCESSED_PREFIX}/{road_id}/{uid}/annotations.json"
+    blob = gcs_client().bucket(GCS_BUCKET).blob(blob_path)
+    if not blob.exists():
+        return None
+    try:
+        text = blob.download_as_text()
+        tasks = json.loads(text)
+    except Exception as e:
+        log.warning("[reprocess] annotations.json unreadable at gs://%s/%s: %s",
+                    GCS_BUCKET, blob_path, e)
+        return None
+    if not isinstance(tasks, list):
+        log.warning("[reprocess] annotations.json not a task list — skipping")
+        return None
+    log.info("[reprocess] found annotations.json (%d tasks) at gs://%s/%s "
+             "→ using as ground truth (overrides result.json bboxes)",
+             len(tasks), GCS_BUCKET, blob_path)
+    return _build_ls_lookup_from_tasks(tasks)
 
 
 def apply_ls_to_frames(
@@ -2796,14 +2857,43 @@ def consolidate_and_rebuild(
                     float(f.get("timeElapsed") or 0))
     merged_frames.sort(key=_sort_key)
 
-    # ── 4. Re-stamp chainage_km cumulatively across the sorted merge. ─────
-    cum_km = 0.0; prev = None
+    # ── 4. Re-stamp chainage_km. Prefer per-segment ground truth: each
+    # segment's Phase B run already projected its frames onto the KML
+    # polyline and stamped a correct intra-segment chainage_km. Offset
+    # each segment's frames by the cumulative road_length of prior
+    # segments. Avoids the cumulative-haversine-across-mis-sorted-segments
+    # bug (R361058: 25.07 km vs ground-truth 13.27 km when 7 videos were
+    # driven out of spatial order and we lack a KML at reprocess time).
+    seg_lengths = {}
+    for seg in segments:
+        sid = str(seg.get("_id", ""))
+        seg_lengths[sid] = float(seg.get("road_length_km") or 0)
+    seen_segs: list[str] = []; seg_offsets: dict[str, float] = {}
+    running = 0.0
     for f in merged_frames:
-        cur = (f.get("latitude"), f.get("longitude"))
-        if prev is not None and None not in cur and None not in prev:
-            cum_km += _haversine_m(prev, cur) / 1000.0
-        f["chainage_km"] = round(cum_km, 3)
-        prev = cur if None not in cur else prev
+        sid = f.get("_seg_order", "")
+        if sid not in seg_offsets:
+            seg_offsets[sid] = running
+            running += seg_lengths.get(sid, 0.0)
+            seen_segs.append(sid)
+    have_seg_chainage = all(
+        f.get("chainage_km") is not None for f in merged_frames[:50]
+    )
+    if have_seg_chainage and sum(seg_lengths.values()) > 0:
+        for f in merged_frames:
+            sid = f.get("_seg_order", "")
+            f["chainage_km"] = round(
+                seg_offsets.get(sid, 0.0) + float(f.get("chainage_km") or 0), 3
+            )
+        cum_km = sum(seg_lengths.values())
+    else:
+        cum_km = 0.0; prev = None
+        for f in merged_frames:
+            cur = (f.get("latitude"), f.get("longitude"))
+            if prev is not None and None not in cur and None not in prev:
+                cum_km += _haversine_m(prev, cur) / 1000.0
+            f["chainage_km"] = round(cum_km, 3)
+            prev = cur if None not in cur else prev
 
     road_length_km = round(cum_km if cum_km > 0 else total_road_length, 2)
     road_rating = round((weighted_rating / total_frames) if total_frames else 0.0, 2)
@@ -2811,7 +2901,16 @@ def consolidate_and_rebuild(
              len(merged_frames), road_length_km, road_rating)
 
     # ── 5. Optional LS override BEFORE severity retag. ────────────────────
+    # apply_ls_to_frames matches by trailing-two of og_file. The LS export
+    # (annotations.json) was authored against merged_frames_<tag>/<seq>.jpg
+    # paths, but at this point each frame's og_file is still the per-segment
+    # relative path (frame_data/frames/frame_XXXXX.jpg). Stamp the merged
+    # path now so the lookup actually hits — stamp_merged_urls_on_frames
+    # later overwrites og_file with the absolute URL anyway.
     if ls_lookup:
+        for idx, f in enumerate(merged_frames):
+            seq = idx * 10
+            f["og_file"] = f"merged_frames_{merged_tag}/{seq:06d}.jpg"
         apply_ls_to_frames(merged_frames, ls_lookup)
 
     # ── 6. Re-tag severity per IBI Guideline (or override). ───────────────
@@ -3353,6 +3452,35 @@ def list_road_folders(root_prefix: str) -> dict[str, str]:
     return found
 
 
+def load_local_road_metadata(metadata_path: str | None, road_id: str) -> dict:
+    """
+    Read road_metadata.json (a local file mapping road_id → defaults for
+    organization / city / project_title / start_address / end_address) and
+    return the entry for road_id. Used to fill in CLI flags that weren't
+    supplied. CLI flags always win — this only fills the gaps.
+
+    Defaults to ./road_metadata.json next to this script. Missing file or
+    missing road_id key → empty dict (caller will then fail validation
+    if any required field is still unset).
+    """
+    if metadata_path:
+        path = Path(metadata_path)
+    else:
+        path = Path(__file__).parent / "road_metadata.json"
+    if not path.exists():
+        return {}
+    try:
+        with open(path) as fh:
+            data = json.load(fh)
+    except Exception as e:
+        log.warning("[metadata] %s unreadable: %s — ignoring", path, e)
+        return {}
+    entry = data.get(road_id)
+    if not isinstance(entry, dict):
+        return {}
+    return entry
+
+
 def load_road_meta_from_gcs(prefix: str, road_id: str) -> dict:
     """
     Pull the optional `_road_meta.json` setup_varanasi_roads.py uploads
@@ -3417,6 +3545,17 @@ def watch_all_roads_mode(
     log.info("  settle time : %ds", args.settle_time)
     log.info("  tracker     : %s", TRACKER_FILE)
     log.info("  Ctrl+C to stop. Tracker survives restarts.")
+
+    # Eagerly create per-road log files for every road currently in the
+    # source prefix, so users see workdir/<road_id>/pipeline.log appear
+    # immediately at watch startup (instead of only after that road's
+    # first batch dispatches into Phase B/C).
+    initial_roads = list_road_folders(root_prefix)
+    for rid in initial_roads:
+        with road_log_session(Path(args.workdir), rid):
+            log.info("[watch-all] discovered %s — log session opened", rid)
+    log.info("[watch-all] %d road(s) under watch: %s",
+             len(initial_roads), ", ".join(sorted(initial_roads)) or "(none)")
 
     # Pre-load YOLO once when running serially; --parallel >1 workers
     # load their own.
@@ -3509,6 +3648,17 @@ def watch_all_roads_mode(
             for rid, mp4, _, _ in flat:
                 log.info("    📋 %s  (road %s)", Path(mp4).name, rid)
 
+            # Tee a "batch dispatched" line to each affected road's log so
+            # users tailing workdir/<road_id>/pipeline.log can see when
+            # work for their road kicked off (Phase B is multi-process so
+            # its own log lines arrive asynchronously per-worker).
+            for rid in roads_in_batch:
+                videos_for_rid = [Path(m).name for r, m, _, _ in flat if r == rid]
+                with road_log_session(Path(args.workdir), rid):
+                    log.info("[watch-all] batch #%d dispatched: %d video(s) → %s",
+                             batch_num, len(videos_for_rid),
+                             ", ".join(videos_for_rid))
+
             # 5) Phase A per pair (cache KML poly/cumdist per road)
             phase_b_jobs = []
             for rid, mp4_blob, gpx_blob, prefix in flat:
@@ -3560,6 +3710,26 @@ def watch_all_roads_mode(
             #    Phase C events for that road land in its pipeline.log
             for rid in roads_in_batch:
                 meta = _get_meta(rid, list_road_folders(root_prefix).get(rid, ""))
+                # Per-road org/city/title from road_metadata.json (the
+                # local JSON next to this script). CLI flags still win if
+                # the operator passed --organization/--city explicitly.
+                local = load_local_road_metadata(args.metadata_json, rid)
+                org_for_road  = args.organization or local.get("organization")
+                city_for_road = args.city         or local.get("city")
+                title_for_road = (meta["project_title"]
+                                  if meta["project_title"] != rid
+                                  else local.get("project_title") or rid)
+                start_for_road = (meta["start_address"]
+                                  if meta["start_address"] not in ("", "TBD")
+                                  else local.get("start_address") or "TBD")
+                end_for_road   = (meta["end_address"]
+                                  if meta["end_address"] not in ("", "TBD")
+                                  else local.get("end_address") or "TBD")
+                if not org_for_road or not city_for_road:
+                    log.warning("[watch-all] %s has no organization/city in "
+                                "road_metadata.json or CLI — skipping Phase C",
+                                rid)
+                    continue
                 kml = _get_kml(rid, list_road_folders(root_prefix).get(rid, ""))
                 if kml:
                     poly, cumdist, kml_path_for_road = kml
@@ -3570,11 +3740,11 @@ def watch_all_roads_mode(
                         uid = consolidate_and_rebuild(
                             road_id=rid,
                             uid_suffix=args.uid_suffix,
-                            organization=args.organization,
-                            city=args.city,
-                            project_title=meta["project_title"],
-                            start_addr=meta["start_address"],
-                            end_addr=meta["end_address"],
+                            organization=org_for_road,
+                            city=city_for_road,
+                            project_title=title_for_road,
+                            start_addr=start_for_road,
+                            end_addr=end_for_road,
                             severity_override=severity_override,
                             ls_lookup=ls_lookup,
                             merged_tag=merged_tag,
@@ -3659,6 +3829,8 @@ def reset_road_state(
         {"$or": [{"video_uid": uid}, {"road_id": road_id}]}
     ).deleted_count
     counts["roads"]               = db.roads.delete_many(
+        {"road_id": road_id}).deleted_count
+    counts["RoadData"]            = db.RoadData.delete_many(
         {"road_id": road_id}).deleted_count
     counts["gcs_blobs"]           = _gcs_delete_prefix(
         f"{PROCESSED_PREFIX}/{road_id}/")
@@ -3792,6 +3964,38 @@ def reconstruct_frames_from_result(coco: dict) -> list[dict]:
     return merged_frames
 
 
+def stamp_merged_urls_on_frames(
+    uid: str,
+    road_id: str,
+    merged_tag: str,
+    frames: list[dict],
+) -> None:
+    """Rewrite each frame's og_file + inference_image to point at the
+    consolidated merged_frames_<tag>/<seq:06d>.jpg + merged_predict_<tag>/
+    URLs in GCS, then persist to inference_data. The dashboard reads these
+    fields to render the Inspection Point images; without absolute URLs
+    they 404.
+
+    Reprocess skips the per-UUID copy (frames already merged on disk) so
+    nothing else stamps these — call this after redraw_merged_predict_from_frames.
+    """
+    raw_prefix = (f"https://storage.googleapis.com/{GCS_BUCKET}/"
+                  f"{PROCESSED_PREFIX}/{road_id}/merged_frames_{merged_tag}")
+    ann_prefix = (f"https://storage.googleapis.com/{GCS_BUCKET}/"
+                  f"{PROCESSED_PREFIX}/{road_id}/merged_predict_{merged_tag}")
+    for idx, f in enumerate(frames):
+        seq = idx * 10
+        f["og_file"] = f"{raw_prefix}/{seq:06d}.jpg"
+        f["inference_image"] = f"{ann_prefix}/{seq:06d}.jpg"
+    db = MongoClient(MONGO_URI)["roadvision"]
+    db.inference_data.update_one(
+        {"uid": uid},
+        {"$set": {"data.frame_list_data": frames}},
+    )
+    log.info("[reprocess] stamped %d merged URLs on inference_data.uid=%s",
+             len(frames), uid)
+
+
 def redraw_merged_predict_from_frames(
     road_id: str,
     uid: str,
@@ -3856,18 +4060,111 @@ def reprocess_from_merged_result_json(
     video_fps:         int = 1,
 ) -> str:
     """
-    Phase C, but the data source is the merged result.json instead of the
-    per-UUID annotation_segments collection. See section banner for the
-    full motivation. Returns the consolidated uid.
+    Re-run Phase C using:
+      • annotation_segments → authoritative GPS / chainage / per-UUID
+        provenance (lat/lng survives even when result.json doesn't carry it,
+        which happens when an external tool re-exports result.json from
+        annotations alone)
+      • annotations.json (GCS sibling of result.json) → authoritative bbox
+        source of truth (RV Studio writes here on every save)
+      • result.json → fallback when segments are absent (legacy V1 data
+        with no annotation_segments rows)
+
+    Then redraws merged_predict frames + re-stitches consolidated videos
+    + upserts inference_data so the dashboard shows the user's corrected
+    annotations end to end. Returns the consolidated uid.
     """
     uid = f"{road_id}_{uid_suffix}"
     merged_tag = merged_tag or uid_suffix
+
+    db = MongoClient(MONGO_URI)["roadvision"]
+    segments = list(db.annotation_segments.find({"road_id": road_id}))
+
+    # ── Primary path: rebuild from segments + annotations.json ────────────
+    if segments:
+        log.info("[reprocess] %d annotation_segments present — using as GPS "
+                 "source of truth (result.json lat/lng would be lossy)",
+                 len(segments))
+        ls_lookup = load_ls_export_from_gcs(road_id, uid)
+        if ls_lookup is None:
+            log.info("[reprocess] no annotations.json next to result.json — "
+                     "falling back to segments' original YOLO bboxes")
+
+        # Auto-detect KML for the multi-video chainage sort. Without it,
+        # consolidate_and_rebuild falls back to MP4-basename sort which
+        # gets the order wrong for surveys recorded out of spatial
+        # sequence (R361058: 76→78→79→77→80→81→82 driven order, not
+        # alphabetical) — adds tens of km of bogus jumps to road_length.
+        poly: list[tuple[float, float]] | None = None
+        cumdist: list[float] | None = None
+        kml_path = gcs_find_kml(f"video-processing-pipelines-data/{road_id}/")
+        if kml_path:
+            try:
+                poly = parse_kml(kml_path)
+                cumdist = precompute_polyline_chainage(poly)
+            except Exception as e:
+                log.warning("[reprocess] KML parse failed (%s) — sort will "
+                            "use MP4 basename order", e)
+
+        # consolidate_and_rebuild does the merge + ls override + severity
+        # retag + report build + result.json + inference_data upsert in
+        # one shot, with proper lat/lng/chainage_km on every frame.
+        consolidate_and_rebuild(
+            road_id=road_id,
+            uid_suffix=uid_suffix,
+            organization=organization,
+            city=city,
+            project_title=project_title,
+            start_addr=start_addr,
+            end_addr=end_addr,
+            severity_override=severity_override,
+            ls_lookup=ls_lookup,
+            merged_tag=merged_tag,
+            polyline=poly,
+            cumdist=cumdist,
+            kml_path=kml_path,
+        )
+        # Pull the freshly-merged frames back so the redraw + video steps
+        # below have the latest inference_info (annotations.json applied).
+        inf_doc = db.inference_data.find_one({"uid": uid})
+        merged_frames = ((inf_doc or {}).get("data") or {}).get("frame_list_data") or []
+
+        # The redraw + videos step at the bottom of this function uses
+        # `merged_frames` directly. Skip the legacy result.json reconstruct
+        # path and jump to the redraw block.
+        if redraw_frames:
+            redraw_merged_predict_from_frames(road_id, uid, merged_tag, merged_frames)
+        stamp_merged_urls_on_frames(uid, road_id, merged_tag, merged_frames)
+        if rebuild_videos:
+            urls = build_consolidated_videos(road_id, uid, merged_tag, fps=video_fps)
+            if urls:
+                stamp_video_urls(uid, urls)
+        log.info("✅ reprocess complete  uid=%s", uid)
+        return uid
+
+    # ── Legacy fallback: result.json only (lat/lng may be missing) ────────
+    log.warning("[reprocess] no annotation_segments for %s — falling back "
+                "to result.json-only path (lat/lng will be None if missing)",
+                road_id)
 
     # 1) Download + parse + reconstruct frames
     coco = download_merged_result_json(road_id, uid, explicit_gs_url)
     merged_frames = reconstruct_frames_from_result(coco)
     if not merged_frames:
         raise SystemExit("merged result.json had no images — nothing to reprocess")
+
+    # 1b) If a sibling annotations.json exists in the same uid folder
+    #     (RV Studio writes the human-corrected bboxes there), it's the
+    #     source of truth — override the inference_info we just rebuilt
+    #     from result.json. Lookup matches by trailing-two-segment image
+    #     path (e.g. merged_frames_day/000010.jpg), which is exactly the
+    #     format both result.json's image.file_name and annotations.json's
+    #     task.data.image use.
+    ls_lookup = load_ls_export_from_gcs(road_id, uid)
+    if ls_lookup:
+        replaced, no_match = apply_ls_to_frames(merged_frames, ls_lookup)
+        log.info("[reprocess] applied annotations.json to %d frames "
+                 "(%d frames had no LS task)", replaced, no_match)
 
     # 2) Severity retag (in case mappings changed since the last run)
     sev_totals = {"high": 0, "medium": 0, "low": 0, "none": 0}
@@ -3957,6 +4254,7 @@ def reprocess_from_merged_result_json(
     # 6) Re-draw merged_predict frames (if labels/bboxes changed)
     if redraw_frames:
         redraw_merged_predict_from_frames(road_id, uid, merged_tag, merged_frames)
+    stamp_merged_urls_on_frames(uid, road_id, merged_tag, merged_frames)
 
     # 7) Re-stitch consolidated videos
     if rebuild_videos:
@@ -4057,21 +4355,31 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--uid-suffix",   default="day",
                     help='Suffix for the consolidated uid, default "day". '
                          'Final uid = "{road_id}_{uid_suffix}".')
-    ap.add_argument("--organization", required=True,
+    ap.add_argument("--organization", default=None,
                     help="Organization the inference_data doc is scoped to "
-                         '(e.g. "BangaloreOrg", "kotaOrg", "VaranasiOrg")')
-    ap.add_argument("--city",         required=True)
+                         '(e.g. "BangaloreOrg", "kotaOrg", "VaranasiOrg"). '
+                         "If omitted, looked up by road_id in --metadata-json.")
+    ap.add_argument("--city", default=None,
+                    help="City label. If omitted, looked up by road_id in "
+                         "--metadata-json.")
     ap.add_argument("--project-title", default=None,
                     help="Display name shown on the dashboard. "
-                         "Single-road mode: required. "
+                         "If omitted, looked up by road_id in --metadata-json. "
                          "--all-roads: read from each road's _road_meta.json "
                          "(falls back to road_id).")
     ap.add_argument("--start-address", default=None,
-                    help='Start address. --all-roads: read from _road_meta.json '
+                    help='Start address. If omitted, looked up by road_id in '
+                         '--metadata-json. --all-roads: read from _road_meta.json '
                          '(falls back to "TBD").')
     ap.add_argument("--end-address",   default=None,
-                    help='End address. --all-roads: read from _road_meta.json '
+                    help='End address. If omitted, looked up by road_id in '
+                         '--metadata-json. --all-roads: read from _road_meta.json '
                          '(falls back to "TBD").')
+    ap.add_argument("--metadata-json", default=None,
+                    help="Path to a JSON mapping road_id → "
+                         "{organization, city, project_title, start_address, "
+                         "end_address}. Defaults to road_metadata.json next to "
+                         "this script. CLI flags above always win over JSON.")
 
     # ── Multi-road watch (mirrors trigger_builds.py with no --road_id) ────
     ap.add_argument("--all-roads", action="store_true",
@@ -4214,6 +4522,28 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
+    # ── Fill any unset per-road args from road_metadata.json ──────────────
+    # Single-road mode only — --all-roads has its own per-road meta path
+    # via load_road_meta_from_gcs (_road_meta.json sitting in GCS).
+    # CLI flags always win; JSON only fills the gaps.
+    if args.road_id and not args.all_roads:
+        meta = load_local_road_metadata(args.metadata_json, args.road_id)
+        if meta:
+            filled = []
+            for cli_attr, json_key in (
+                ("organization",  "organization"),
+                ("city",          "city"),
+                ("project_title", "project_title"),
+                ("start_address", "start_address"),
+                ("end_address",   "end_address"),
+            ):
+                if getattr(args, cli_attr) is None and meta.get(json_key):
+                    setattr(args, cli_attr, meta[json_key])
+                    filled.append(f"{cli_attr}={meta[json_key]}")
+            if filled:
+                log.info("[metadata] %s filled from road_metadata.json: %s",
+                         args.road_id, ", ".join(filled))
+
     severity_override = None
     if args.severity_map_json:
         with open(args.severity_map_json) as f:
@@ -4262,11 +4592,19 @@ def main() -> None:
     if not args.gcs_prefix or not args.road_id:
         raise SystemExit("--gcs-prefix and --road-id are required "
                          "(or pass --all-roads --watch for multi-road mode)")
-    if not args.project_title or not args.start_address or not args.end_address:
-        raise SystemExit("--project-title, --start-address and --end-address "
-                         "are required in single-road mode "
-                         "(or pass --all-roads --watch which reads from "
-                         "each road's _road_meta.json)")
+    missing = [name for name, val in (
+        ("--organization",  args.organization),
+        ("--city",          args.city),
+        ("--project-title", args.project_title),
+        ("--start-address", args.start_address),
+        ("--end-address",   args.end_address),
+    ) if not val]
+    if missing:
+        raise SystemExit(
+            f"Missing required field(s) in single-road mode: {', '.join(missing)}. "
+            f"Either pass them as CLI flags, or add an entry for '{args.road_id}' "
+            f"to road_metadata.json (or pass --all-roads --watch which reads "
+            f"each road's _road_meta.json from GCS).")
 
     # ── KML resolution (shared by single-road watch + one-shot modes) ────
     prefix_with_slash = args.gcs_prefix.rstrip("/") + "/"
@@ -4280,26 +4618,30 @@ def main() -> None:
     # ── REPROCESS MODE — Phase C only, from merged result.json ───────────
     if args.reprocess:
         merged_tag = args.merged_tag or args.uid_suffix
-        if args.watch:
-            reprocess_watch_mode(args, severity_override)
-        else:
-            reprocess_from_merged_result_json(
-                road_id=args.road_id, uid_suffix=args.uid_suffix,
-                organization=args.organization, city=args.city,
-                project_title=args.project_title,
-                start_addr=args.start_address, end_addr=args.end_address,
-                severity_override=severity_override,
-                merged_tag=merged_tag,
-                explicit_gs_url=args.reprocess_result_path,
-                redraw_frames=not args.reprocess_skip_frames,
-                rebuild_videos=not args.reprocess_skip_videos,
-                video_fps=args.video_fps,
-            )
+        # Wrap in road_log_session so reprocess output also lands in
+        # workdir/<road_id>/pipeline.log alongside one-shot runs.
+        with road_log_session(Path(args.workdir), args.road_id):
+            if args.watch:
+                reprocess_watch_mode(args, severity_override)
+            else:
+                reprocess_from_merged_result_json(
+                    road_id=args.road_id, uid_suffix=args.uid_suffix,
+                    organization=args.organization, city=args.city,
+                    project_title=args.project_title,
+                    start_addr=args.start_address, end_addr=args.end_address,
+                    severity_override=severity_override,
+                    merged_tag=merged_tag,
+                    explicit_gs_url=args.reprocess_result_path,
+                    redraw_frames=not args.reprocess_skip_frames,
+                    rebuild_videos=not args.reprocess_skip_videos,
+                    video_fps=args.video_fps,
+                )
         return
 
     # ── WATCH MODE — long-running upload-poll loop, exits on Ctrl+C ──────
     if args.watch:
-        watch_mode(args, severity_override, ls_lookup, poly, cumdist, kml_path)
+        with road_log_session(Path(args.workdir), args.road_id):
+            watch_mode(args, severity_override, ls_lookup, poly, cumdist, kml_path)
         return
 
     # ── ONE-SHOT MODE: PHASE A — KML/GPX projection ──────────────────────
